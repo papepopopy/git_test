@@ -1,0 +1,19 @@
+CREATE DEFINER=`root`@`localhost` FUNCTION `bbs1`.`uf_datetime2string`(dt_ DATETIME) RETURNS varchar(10) CHARSET utf8mb3
+    DETERMINISTIC
+BEGIN
+    DECLARE ret_ VARCHAR(10);
+
+    IF TIMESTAMPDIFF(MINUTE, dt_, NOW()) < 1 THEN 
+        SET ret_ := '방금';
+    ELSEIF TIMESTAMPDIFF(MINUTE, dt_, NOW()) < 60 THEN 
+        SET ret_ := CONCAT(TIMESTAMPDIFF(MINUTE, dt_, NOW()), '분전');
+    ELSEIF TIMESTAMPDIFF(HOUR, dt_, NOW()) < 24 THEN 
+        SET ret_ := CONCAT(TIMESTAMPDIFF(HOUR, dt_, NOW()), '시간전');
+    ELSEIF TIMESTAMPDIFF(DAY, dt_, NOW()) < 7 THEN 
+        SET ret_ := CONCAT(TIMESTAMPDIFF(DAY, dt_, NOW()), '일전');
+    ELSE 
+        SET ret_ := DATE_FORMAT(dt_, '%Y-%m-%d');
+    END IF;
+
+    RETURN ret_;
+END
